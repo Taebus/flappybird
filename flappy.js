@@ -4,7 +4,7 @@ var stateActions = { preload: preload, create: create, update: update };
 var game = new Phaser.Game(700, 400, Phaser.AUTO, 'game', stateActions);
 var score = 0;
 var player;
-
+var pipes;
 
 //Loads all resources for the game and gives them names.
  function preload() {
@@ -23,6 +23,12 @@ var player;
     game.add.audio("ouch");
 
     game.stage.setBackgroundColor("#58FAF4");
+
+    pipes=game.add.group();
+    game.time.events.loop(2*Phaser.Timer.SECOND, generate_pipes);
+
+    /*
+
     game.add.text(100, 180, // coordinates
     "Welcome to FlappyAlex!", // text
         { font: "40px Elephant", // font size and typeface
@@ -45,18 +51,14 @@ var player;
         { font: "20px Elephant", // font size and typeface
             fill: ""} // text color
     );
-
-    //Our player section
-    var x = 50;
-    var y = 50;
-    player = game.add.sprite(x,y, "playerImg");
+*/
 
      //Our keyboard inputs
-    game.input.onDown.add(clickHandler);
+    //game.input.onDown.add(clickHandler);
     game.input.keyboard
         .addKey(Phaser.Keyboard.SPACEBAR)
-        .onDown.add(spaceHandler);
-    game.input.keyboard
+        .onDown.add(player_jump);
+    /*game.input.keyboard
         .addKey(Phaser.Keyboard.RIGHT)
         .onDown.add(moveRight);
     game.input.keyboard
@@ -68,10 +70,13 @@ var player;
     game.input.keyboard
         .addKey(Phaser.Keyboard.DOWN)
         .onDown.add(moveDown);
+*/
 
-     //Pipes
-/*
-     for(var i = 0; i < 1000; i++){
+     //Physics
+     game.physics.startSystem(Phaser.Physics.ARCADE);
+
+
+     /*for(var i = 0; i < 1000; i++){
              var gap = Math.floor(Math.random()*6);
              console.log(gap);
      }
@@ -80,11 +85,14 @@ var player;
          console.log(gap2);
      }
      for(var count1x = 0; count1x<=gap; count1x++){
-         game.add.sprite(300, 50 * count1x, "pipe");
+         //game.add.sprite(250, 50 * count1x, "pipe");
+         add_pipe_part(pipe_offset, i*pipe_size, "pipe");
      }
 
+var
+
      for(var count1y = gap +3 ; count1y<=gap+10; count1y++){
-         game.add.sprite(300, 50 * count1y, "pipe");
+         game.add.sprite(250, 50 * count1y, "pipe");
      }
 
      for(var count2x = 0; count2x<=gap2; count2x++){
@@ -95,10 +103,43 @@ var player;
          game.add.sprite(500, 50 * count2y, "pipe");
      }
 */
+//Our player section
+     var x = 100;
+     var y = 200;
+     player = game.add.sprite(x, y,"playerImg");
+     game.physics.arcade.enable(player);
+     player.anchor.setTo(0.5,0.5);
+     player.checkWorldBounds = true;
 
+     //player.body.velocity.y = -200;
 
+     player.body.velocity.x = 0;
+
+     player.body.gravity.y=200;
+
+     pipes = game.add.group();
+ }
+
+function player_jump(){
+    player.body.velocity.y=-130;
 }
 
+function generate_pipes(){
+    var hole = Math.floor(Math.random()*5+1);
+    var pipe_offset=800;
+    var i;
+    for (i=0; i < hole; i++){
+        add_pipe_part(pipe_offset, i*50, "pipe");
+    }
+    for(i=hole + 2; i <8; i++){add_pipe_part(pipe_offset, i * 50, "pipe");
+    }
+}
+
+function add_pipe_part(x,y,pipe_part) {
+    var pipe = pipes.create(x , y, pipe_part);
+    game.physics.arcade.enable(pipe);
+    pipe.body.velocity.x = -200; //game velocity
+}
 //Our movement functions
 function clickHandler (event)
 {
@@ -120,8 +161,8 @@ function moveDown ()
 function moveUp ()
 {
     player.y = player.y - 10;
-}
-function spaceHandler (event) {
+
+/*function spaceHandler (event) {
         game.add.text(72, 225, // coordinates
             "Do you dare play FlappyAlex?!", // text
             {
@@ -130,6 +171,7 @@ function spaceHandler (event) {
             } // text color
         );
         game.sound.play("ouch")
+*/
 }
 //This function updates the scene. It is called for every new frame.
 function update()
