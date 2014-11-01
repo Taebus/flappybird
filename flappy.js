@@ -5,12 +5,14 @@ var game = new Phaser.Game(700, 400, Phaser.AUTO, 'game', stateActions);
 var score = 0;
 var player;
 
+
 //Loads all resources for the game and gives them names.
  function preload() {
     game.load.image("playerImg", "assets/FlappyAlexFace.png");
     game.load.audio("backgroundmusic", "assets/Numa.ogg");
-    game.load.audio("woohoo", "assets/woohoo.ogg")
+    game.load.audio("woohoo", "assets/woohoo.ogg");
     game.load.audio("ouch", "assets/Ouch.ogg");
+    game.load.image("pipe", "assets/pipe.png");
 }
 
 //Initialises the game. This function is only called once.
@@ -66,6 +68,35 @@ var player;
     game.input.keyboard
         .addKey(Phaser.Keyboard.DOWN)
         .onDown.add(moveDown);
+
+     //Pipes
+/*
+     for(var i = 0; i < 1000; i++){
+             var gap = Math.floor(Math.random()*6);
+             console.log(gap);
+     }
+     for(var i = 0; i < 1000; i++) {
+         var gap2 = Math.floor(Math.random() * 6);
+         console.log(gap2);
+     }
+     for(var count1x = 0; count1x<=gap; count1x++){
+         game.add.sprite(300, 50 * count1x, "pipe");
+     }
+
+     for(var count1y = gap +3 ; count1y<=gap+10; count1y++){
+         game.add.sprite(300, 50 * count1y, "pipe");
+     }
+
+     for(var count2x = 0; count2x<=gap2; count2x++){
+         game.add.sprite(500, 50 * count2x, "pipe");
+     }
+
+     for(var count2y = gap2 +3 ; count2y<=gap2+10; count2y++){
+         game.add.sprite(500, 50 * count2y, "pipe");
+     }
+*/
+
+
 }
 
 //Our movement functions
