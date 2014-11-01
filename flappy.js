@@ -5,6 +5,7 @@ var game = new Phaser.Game(700, 400, Phaser.AUTO, 'game', stateActions);
 var score = 0;
 var player;
 var pipes;
+var playeroverlap;
 
 //Loads all resources for the game and gives them names.
  function preload() {
@@ -118,10 +119,14 @@ var
      player.body.gravity.y=200;
 
      pipes = game.add.group();
+
+     playeroverlap = false;
  }
 
 function player_jump(){
     player.body.velocity.y=-130;
+
+    if (playeroverlap) playeroverlap = false;
 }
 
 function generate_pipes(){
@@ -176,4 +181,12 @@ function moveUp ()
 //This function updates the scene. It is called for every new frame.
 function update()
 {
+    game.physics.arcade
+        .overlap(player, pipes, ouch);
+}
+
+function ouch()
+{
+    if (!playeroverlap) game.sound.play("ouch");
+    playeroverlap = true;
 }
